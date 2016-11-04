@@ -1,6 +1,8 @@
 "use strict"
 
 const hapi = require("hapi")
+const blankie = require("blankie")
+const scooter = require("scooter")
 const server = new hapi.Server()
 
 server.connection({
@@ -14,10 +16,20 @@ server.route({
     },
 })
 
-server.start(err => {
-    if (err) {
-        throw err
+server.register([scooter, {
+    "register": blankie,
+    "options": {
+        // ..CSP directives here
+        "defaultSrc": "self",
     }
+}], err => {
 
-    console.log("server at " + server.info.uri)
+    server.start(err => {
+        if (err) {
+            throw err
+        }
+
+        console.log("server at " + server.info.uri)
+    })
+
 })
