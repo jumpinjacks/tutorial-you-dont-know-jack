@@ -19,10 +19,28 @@ server.register([inert, scooter, {
     }
 }], err => {
 
+    server.state("session", {
+        "ttl": 24 * 60 * 60 * 1000,
+        "isSecure": false,
+        "isHttpOnly": false,
+        "path": "/",
+        "encoding": "base64json",
+    })
+
     server.route({
         "method": "get", "path": "/",
         handler: function (request, reply) {
-            reply("hello world")
+            let session = request.state.session
+
+            if (!session) {
+                session = {
+                    "returning": true
+                }
+            }
+
+            session.date = Date.now()
+
+            return reply("hello world").state("session", session);
         },
     })
 
