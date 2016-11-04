@@ -31,7 +31,7 @@ server.register([inert, scooter, {
         "handler": {
             "directory": {
                 "path": "public",
-                "listing": true,
+                // "listing": true,
             },
         },
     })
